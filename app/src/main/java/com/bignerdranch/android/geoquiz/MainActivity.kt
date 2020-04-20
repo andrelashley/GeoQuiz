@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import kotlin.math.roundToInt
 
 private const val TAG = "MainActivity"
 
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_asia, true))
 
     private var currentIndex = 0
+    private var numberCorrect = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         val correctAnswer = questionBank[currentIndex].answer
 
         val messageResId = if (userAnswer == correctAnswer) {
+            numberCorrect++
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
@@ -94,5 +97,11 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
             .show()
+
+        if(currentIndex == questionBank.size - 1) {
+            val percentageCorrect = (numberCorrect.toDouble() / questionBank.size.toDouble()) * 100.0
+            Toast.makeText(this, "percentage correct: ${percentageCorrect.roundToInt()} percent", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 }
