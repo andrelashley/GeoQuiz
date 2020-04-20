@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_americas, true),
         Question(R.string.question_asia, true))
 
+    private val answeredQuestions = mutableListOf<Question>()
+
     private var currentIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,12 +81,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion() {
+        if(answeredQuestions.contains(questionBank[currentIndex])) {
+            trueButton.isEnabled = false
+            falseButton.isEnabled = false
+            return
+        }
         val questionTextResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionTextResId)
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
         val correctAnswer = questionBank[currentIndex].answer
+        answeredQuestions.add(questionBank[currentIndex])
 
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
