@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 
 private const val TAG = "MainActivity"
 private const val KEY_INDEX = "index"
+private const val KEY_CHEATER = "cheater"
 private const val REQUEST_CHEAT_CODE = 0
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
         quizViewModel.currentIndex = currentIndex
+        val cheater = savedInstanceState?.getBoolean(KEY_CHEATER, false) ?: false
+        quizViewModel.isCheater = cheater
         val provider: ViewModelProvider = ViewModelProviders.of(this)
         val quizViewModel = provider.get(QuizViewModel::class.java)
         Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
@@ -99,6 +102,7 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(savedInstanceState)
         Log.i(TAG, "onSaveInstanceState")
         savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)
+        savedInstanceState.putBoolean(KEY_CHEATER, quizViewModel.isCheater)
     }
 
     override fun onStop() {
