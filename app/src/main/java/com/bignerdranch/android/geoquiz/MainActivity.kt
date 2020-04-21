@@ -1,7 +1,10 @@
 package com.bignerdranch.android.geoquiz
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cheatButton: Button
     private lateinit var questionTextView: TextView
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
@@ -58,11 +62,17 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
         }
 
-        cheatButton.setOnClickListener{
+        cheatButton.setOnClickListener{ view ->
             // start cheat activity
             val answerIsTrue = quizViewModel.currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
-            startActivityForResult(intent, REQUEST_CHEAT_CODE)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val options = ActivityOptions
+                    .makeClipRevealAnimation(view, 0, 0, view.width, view.height)
+                startActivityForResult(intent, REQUEST_CHEAT_CODE, options.toBundle())
+            } else {
+                startActivityForResult(intent, REQUEST_CHEAT_CODE)
+            }
         }
 
         updateQuestion()
